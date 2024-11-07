@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Security Quiz Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+        }
+        #gameContainer {
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+        h1 {
+            color: #e74c3c;
+        }
+        .question, .result {
+            font-size: 1.5rem;
+            margin: 20px 0;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.5s;
+        }
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .options button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .options button:hover {
+            background-color: #3498db;
+        }
+        .correct {
+            background-color: #2ecc71;
+            color: white;
+        }
+        .incorrect {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .score {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div id="gameContainer">
+    <h1>Cyber Security Quiz</h1>
+    <div id="quiz">
+        <div id="question" class="question">Question will appear here</div>
+        <div class="options">
+            <button onclick="checkAnswer(0)">Option 1</button>
+            <button onclick="checkAnswer(1)">Option 2</button>
+            <button onclick="checkAnswer(2)">Option 3</button>
+            <button onclick="checkAnswer(3)">Option 4</button>
+        </div>
+        <div id="result" class="result"></div>
+        <div class="score">Score: <span id="score">0</span></div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "What should you do if you receive a suspicious email?",
+            options: [
+                "Open it to see what it says",
+                "Click all links to make sure they're safe",
+                "Report it as spam or phishing",
+                "Forward it to your contacts"
+            ],
+            answer: 2
+        },
+        {
+            question: "What’s the best way to protect your password?",
+            options: [
+                "Share it only with close friends",
+                "Write it down and store it online",
+                "Use a password manager",
+                "Use the same password for all accounts"
+            ],
+            answer: 2
+        },
+        {
+            question: "What is phishing?",
+            options: [
+                "A type of malware",
+                "A scam to trick you into sharing information",
+                "A secure way to protect your data",
+                "A strong password technique"
+            ],
+            answer: 1
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const questionEl = document.getElementById("question");
+        const resultEl = document.getElementById("result");
+        const scoreEl = document.getElementById("score");
+
+        questionEl.textContent = questions[currentQuestion].question;
+        questionEl.classList.add("visible");
+        const buttons = document.querySelectorAll(".options button");
+        buttons.forEach((button, index) => {
+            button.textContent = questions[currentQuestion].options[index];
+            button.classList.remove("correct", "incorrect");
+        });
+
+        resultEl.textContent = "";
+        scoreEl.textContent = score;
+    }
+
+    function checkAnswer(selectedIndex) {
+        const correctIndex = questions[currentQuestion].answer;
+        const buttons = document.querySelectorAll(".options button");
+        const resultEl = document.getElementById("result");
+
+        if (selectedIndex === correctIndex) {
+            buttons[selectedIndex].classList.add("correct");
+            resultEl.textContent = "Correct! Great job!";
+            score++;
+        } else {
+            buttons[selectedIndex].classList.add("incorrect");
+            buttons[correctIndex].classList.add("correct");
+            resultEl.textContent = "Oops! That was incorrect.";
+        }
+        resultEl.classList.add("visible");
+
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            setTimeout(loadQuestion, 2000);
+        } else {
+            setTimeout(showFinalScore, 2000);
+        }
+    }
+
+    function showFinalScore() {
+        const questionEl = document.getElementById("question");
+        const resultEl = document.getElementById("result");
+
+        questionEl.textContent = "Game Over!";
+        resultEl.textContent = `Your final score is ${score} out of ${questions.length}`;
+        document.querySelectorAll(".options button").forEach(button => button.style.display = "none");
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
